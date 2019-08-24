@@ -12,7 +12,7 @@ Make sure the following are installed:
 You'll need to enable SPI for the OLED screen to work properly. Typing the following command in the terminal will bring you to a configuration menu.
 
 ```
-raspi-config 
+raspi-config
 ```
 
 Then navigate to `Interfacing Options` and select `SPI`. Make sure it's turned on and reboot.
@@ -102,7 +102,7 @@ Holds all of the possible drink options. Drinks are filtered by the values in th
 {"name": "Gin", "value": "gin"}
 ```
 
-The name will be displayed on the pump configuration menu and the value will be assigned to the pump. The pump values will filter out drinks that the user can't make with the current pump configuration. 
+The name will be displayed on the pump configuration menu and the value will be assigned to the pump. The pump values will filter out drinks that the user can't make with the current pump configuration.
 
 ### pump_config.json
 The pump configuration persists information about pumps and the liquids that they are assigned to. An pump entry looks like this:
@@ -110,7 +110,7 @@ The pump configuration persists information about pumps and the liquids that the
 ```
 "pump_1": {
 		"name": "Pump 1",
-		"pin": 17, 
+		"pin": 17,
 		"value": "gin"
 	}
 ```
@@ -145,6 +145,6 @@ cd your/pwd/path/here
 sudo python bartender.py &
 ```
 
-`your/pwd/path/here` should be replaced with the path you copied above. `sudo python bartender.py &` starts the bartender program in the background. Finally, press `esc` then `ZZ` to save and exit. 
+`your/pwd/path/here` should be replaced with the path you copied above. `sudo python bartender.py &` starts the bartender program in the background. Finally, press `esc` then `ZZ` to save and exit.
 
 If that doesn't work, you can consult this [guide](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/) for more options.

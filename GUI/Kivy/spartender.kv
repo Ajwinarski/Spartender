@@ -1,0 +1,123 @@
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+#: import WipeTransition kivy.uix.screenmanager.WipeTransition
+#: import SlideTransition kivy.uix.screenmanager.SlideTransition
+#: import SwapTransition kivy.uix.screenmanager.SwapTransition
+
+ScreenManagement:
+    #transition: FadeTransition()
+    transition: SlideTransition()
+    #transition: SwapTransition()
+    MainScreen:
+    DrinksScreen:
+    ConfigScreen:
+    SettingsScreen:
+
+<MainScreen>:
+    name: 'main'
+
+    Label:
+        text: 'Spartender'
+        size_hint: (0.7, 0.4)
+        pos_hint: {'center_x': 0.5, 'top': 0.95}
+        font_size: 112
+        font_name: 'assets/fonts/NCAAMichiganStSpartans.otf'
+
+    # Quit Button
+    Button:
+        on_press: quit()
+        size_hint: (.05, .05)
+        pos_hint: {'right': 1, 'top': 1}
+        background_color: 0, 0, 0, 0
+        color: 1,1,1,1
+        text: 'x'
+        font_size: 12
+
+    # Config Button
+    Button:
+        on_press: root.manager.transition.direction = 'left'
+        on_release: app.root.current = 'config'
+        size_hint: (.2, .4)
+        pos_hint: {'left': 1, 'bottom': 1}
+        background_color: 255,255,255,1 #rgba(255,255,255,1)
+        color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
+        text: 'Config'
+        font_size: 32
+
+    # Drinks Button
+    Button:
+        on_press: root.manager.transition.direction = 'left'
+        on_release: app.root.current = 'drinks'
+        size_hint: (.4, .4)
+        pos_hint: {'center_x': .5, 'bottom': 1}
+        background_color: 255,255,255,1 #rgba(255,255,255,1)
+        color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
+        text: 'Drinks'
+        font_size: 32
+
+    # Settings Button
+    Button:
+        on_press: root.manager.transition.direction = 'left'
+        on_release: app.root.current = 'settings'
+        size_hint: (.2, .4)
+        pos_hint: {'right': 1, 'bottom': 1}
+        background_color: 255,255,255,1 #rgba(255,255,255,1)
+        color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
+        text: 'Settings'
+        font_size: 32
+
+<DrinksScreen>:
+    name: 'drinks'
+
+    # Back Button
+    Button:
+        on_press: root.manager.transition.direction = 'right'
+        on_release: app.root.current = 'main'
+        size_hint: (.18, .18)
+        pos_hint: {'left': 1, 'top': 1}
+        background_color: 0, 0, 0, 0
+        text: '< Back'
+        font_size: 32
+
+<ConfigScreen>:
+    name: 'config'
+
+    # Back Button
+    Button:
+        on_press: root.manager.transition.direction = 'right'
+        on_release: app.root.current = 'main'
+        size_hint: (.18, .18)
+        pos_hint: {'left': 1, 'top': 1}
+        background_color: 0, 0, 0, 0
+        text: '< Back'
+        font_size: 28
+
+<SettingsScreen>:
+    name: 'settings'
+
+    # Back Button
+    Button:
+        on_press: root.manager.transition.direction = 'right'
+        on_release: app.root.current = 'main'
+        size_hint: (.18, .18)
+        pos_hint: {'left': 1, 'top': 1}
+        background_color: 0, 0, 0, 0
+        text: '< Back'
+        font_size: 32
+
+    # rows: 4
+    # orientation: horizontal
+
+    BoxLayout:
+        size_hint_y: None
+        Label:
+            text: '[anchor=a][b]Party Mode[/b]\n[i]Gets rid of the available config and settings[/i]'
+            markup: True
+        Switch:
+            #id:switch1
+    BoxLayout:
+        size_hint_y: None
+        Label:
+            #id:label1
+            text: 'Label 2'
+        Switch:
+            #id:switch2
