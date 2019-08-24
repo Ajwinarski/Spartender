@@ -1,4 +1,4 @@
-# Smart Bartender
+# Spartender
 Why spend lots of money going out for drinks when you can have your own smart personal bartender at your service right in your home?! This bartender is built from a Raspberry Pi 3 and some common DIY electronics.
 
 ## Prerequisites for the Raspberry Pi
