@@ -36,33 +36,36 @@ ScreenManagement:
     Button:
         on_press: root.manager.transition.direction = 'left'
         on_release: app.root.current = 'config'
-        size_hint: (.2, .4)
-        pos_hint: {'left': 1, 'bottom': 1}
+        size_hint: (.25, .4)
+        pos_hint: {'x': .05, 'y': .08}
         background_color: 255,255,255,1 #rgba(255,255,255,1)
         color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
         text: 'Config'
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
 
     # Drinks Button
     Button:
         on_press: root.manager.transition.direction = 'left'
         on_release: app.root.current = 'drinks'
-        size_hint: (.4, .4)
-        pos_hint: {'center_x': .5, 'bottom': 1}
+        size_hint: (.35, .4)
+        pos_hint: {'center_x': .5, 'y': .08}
         background_color: 255,255,255,1 #rgba(255,255,255,1)
         color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
         text: 'Drinks'
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
 
     # Settings Button
     Button:
         on_press: root.manager.transition.direction = 'left'
         on_release: app.root.current = 'settings'
-        size_hint: (.2, .4)
-        pos_hint: {'right': 1, 'bottom': 1}
+        size_hint: (.25, .4)
+        pos_hint: {'x': .70, 'y': .08}
         background_color: 255,255,255,1 #rgba(255,255,255,1)
         color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
         text: 'Settings'
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
 
 <DrinksScreen>:
@@ -76,6 +79,7 @@ ScreenManagement:
         pos_hint: {'left': 1, 'top': 1}
         background_color: 0, 0, 0, 0
         text: '< Back'
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
 
 <ConfigScreen>:
@@ -89,6 +93,7 @@ ScreenManagement:
         pos_hint: {'left': 1, 'top': 1}
         background_color: 0, 0, 0, 0
         text: '< Back'
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 28
 
 <SettingsScreen>:
@@ -102,22 +107,52 @@ ScreenManagement:
         pos_hint: {'left': 1, 'top': 1}
         background_color: 0, 0, 0, 0
         text: '< Back'
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
 
-    # rows: 4
-    # orientation: horizontal
+    GridLayout:
+        cols: 2
+        row: 2
+        #spacing: 20, 20
+        padding: 100, 70
+        row_force_default: True
+        row_default_height: 44
 
-    BoxLayout:
-        size_hint_y: None
         Label:
-            text: '[anchor=a][b]Party Mode[/b]\n[i]Gets rid of the available config and settings[/i]'
+            text: '[b]Party Mode[/b]\n[i]Gets rid of the available config and settings[/i]'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+            width: 200
             markup: True
         Switch:
-            #id:switch1
-    BoxLayout:
-        size_hint_y: None
+            #id:partyModeSwitch
+            width: 50
+
         Label:
             #id:label1
-            text: 'Label 2'
+            text: '[b]Pin Mode[/b]\n[i]Requires a pin for the dispensing of drinks[/i]'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+            width: 200
+            markup: True
         Switch:
             #id:switch2
+            width: 50
+
+
+    # BoxLayout:
+    #     size_hint_y: None
+    #     Label:
+    #         text: '[anchor=a][b]Party Mode[/b]\n[i]Gets rid of the available config and settings[/i]'
+    #         markup: True
+    #     Switch:
+    #         #id:switch1
+    # BoxLayout:
+    #     size_hint_y: None
+    #     Label:
+    #         #id:label1
+    #         text: 'Label 2'
+    #     Switch:
+    #         #id:switch2
