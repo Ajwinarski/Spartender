@@ -3,7 +3,7 @@
 #: import SlideTransition kivy.uix.screenmanager.SlideTransition
 #: import SwapTransition kivy.uix.screenmanager.SwapTransition
 
-ScreenManagement:
+ScreenManager:
     #transition: FadeTransition()
     transition: SlideTransition()
     #transition: SwapTransition()
@@ -59,7 +59,8 @@ ScreenManagement:
     # Settings Button
     Button:
         on_press: root.manager.transition.direction = 'left'
-        on_release: app.root.current = 'settings'
+        #on_release: app.root.current = 'settings'
+        on_release: app.open_settings()
         size_hint: (.25, .4)
         pos_hint: {'x': .70, 'y': .08}
         background_color: 255,255,255,1 #rgba(255,255,255,1)
