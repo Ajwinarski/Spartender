@@ -3,14 +3,14 @@
 #: import SlideTransition kivy.uix.screenmanager.SlideTransition
 #: import SwapTransition kivy.uix.screenmanager.SwapTransition
 
-ScreenManager:
-    #transition: FadeTransition()
-    transition: SlideTransition()
-    #transition: SwapTransition()
-    MainScreen:
-    DrinksScreen:
-    ConfigScreen:
-    SettingsScreen:
+# ScreenManager:
+#     #transition: FadeTransition()
+     # transition: SlideTransition(duration = 0.55)
+#     #transition: SwapTransition()
+#     MainScreen:
+#     DrinksScreen:
+#     ConfigScreen:
+#     # SettingsScreen:
 
 <MainScreen>:
     name: 'main'
@@ -21,6 +21,18 @@ ScreenManager:
         pos_hint: {'center_x': 0.5, 'top': 0.95}
         font_size: 112
         font_name: 'assets/fonts/NCAAMichiganStSpartans.otf'
+
+    LongpressButton:
+        long_press_time: 3
+        # on_press: lambda w: setattr(w, 'text', 'Pressed')
+        # on_long_press: lambda w: setattr(w, 'text', 'Long press')
+        on_long_press: app.open_settings()
+        size_hint: (.05, .05)
+        pos_hint: {'left': 1, 'top': 1}
+        background_color: 0, 0, 0, 0
+        color: 1,1,1,1
+        text: ''
+        font_size: 12
 
     # Quit Button
     Button:
@@ -34,6 +46,7 @@ ScreenManager:
 
     # Config Button
     Button:
+        id: configBtn
         on_press: root.manager.transition.direction = 'left'
         on_release: app.root.current = 'config'
         size_hint: (.25, .4)
@@ -97,50 +110,50 @@ ScreenManager:
         font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 28
 
-<SettingsScreen>:
-    name: 'settings'
-
-    # Back Button
-    Button:
-        on_press: root.manager.transition.direction = 'right'
-        on_release: app.root.current = 'main'
-        size_hint: (.18, .18)
-        pos_hint: {'left': 1, 'top': 1}
-        background_color: 0, 0, 0, 0
-        text: '< Back'
-        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
-        font_size: 32
-
-    GridLayout:
-        cols: 2
-        row: 2
-        #spacing: 20, 20
-        padding: 100, 70
-        row_force_default: True
-        row_default_height: 44
-
-        Label:
-            text: '[b]Party Mode[/b]\n[i]Gets rid of the available config and settings[/i]'
-            text_size: self.size
-            halign: 'left'
-            valign: 'middle'
-            width: 200
-            markup: True
-        Switch:
-            #id:partyModeSwitch
-            width: 50
-
-        Label:
-            #id:label1
-            text: '[b]Pin Mode[/b]\n[i]Requires a pin for the dispensing of drinks[/i]'
-            text_size: self.size
-            halign: 'left'
-            valign: 'middle'
-            width: 200
-            markup: True
-        Switch:
-            #id:switch2
-            width: 50
+# <SettingsScreen>:
+#     name: 'settings'
+#
+#     # Back Button
+#     Button:
+#         on_press: root.manager.transition.direction = 'right'
+#         on_release: app.root.current = 'main'
+#         size_hint: (.18, .18)
+#         pos_hint: {'left': 1, 'top': 1}
+#         background_color: 0, 0, 0, 0
+#         text: '< Back'
+#         font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+#         font_size: 32
+#
+#     GridLayout:
+#         cols: 2
+#         row: 2
+#         #spacing: 20, 20
+#         padding: 100, 70
+#         row_force_default: True
+#         row_default_height: 44
+#
+#         Label:
+#             text: '[b]Party Mode[/b]\n[i]Gets rid of the available config and settings[/i]'
+#             text_size: self.size
+#             halign: 'left'
+#             valign: 'middle'
+#             width: 200
+#             markup: True
+#         Switch:
+#             #id:partyModeSwitch
+#             width: 50
+#
+#         Label:
+#             #id:label1
+#             text: '[b]Pin Mode[/b]\n[i]Requires a pin for the dispensing of drinks[/i]'
+#             text_size: self.size
+#             halign: 'left'
+#             valign: 'middle'
+#             width: 200
+#             markup: True
+#         Switch:
+#             #id:switch2
+#             width: 50
 
 
     # BoxLayout:
