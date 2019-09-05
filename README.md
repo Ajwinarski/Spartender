@@ -1,23 +1,10 @@
 # Spartender
-Why spend lots of money going out for drinks when you can have your own smart personal bartender at your service right in your home?! This bartender is built from a Raspberry Pi 3 and some common DIY electronics.
-
-## Prerequisites for the Raspberry Pi
-Make sure you can connect a screen and keyboard to your Raspberry Pi. I like to use VNC to connect to the Pi. I created a [tutorial](https://www.youtube.com/watch?v=2iVK8dn-6x4) about how to set that up on a Mac.
+A smart bartender used to pour perfectly measured drinks for you. Built with a Raspberry Pi 3 B+, peristaltic pumps, a 7in touch screen, some common DIY electronics, and <❤️>.
 
 Make sure the following are installed:
-* Python 2.7 (should already be installed on most Raspberry Pi)
+* Python >= 2.7 (should already be installed on most Raspberry Pi)
+  * Optionally: You can install and use Python >= 3.4 if Python >= 2.7 is installed
 * [pip](https://www.raspberrypi.org/documentation/linux/software/python.md)
-
-### Enable SPI
-You'll need to enable SPI for the OLED screen to work properly. Typing the following command in the terminal will bring you to a configuration menu.
-
-```
-raspi-config
-```
-
-Then navigate to `Interfacing Options` and select `SPI`. Make sure it's turned on and reboot.
-
-See this [article](https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/) for more help if you need it.
 
 ### I2C
 Make sure i2c is also configured properly. Type
@@ -37,31 +24,15 @@ i2c-dev
 
 press `esc` then `ZZ` to save and exit.
 
-## OLED Setup
-The Raspberry Pi Guy has a nice script to setup the OLED screen on your raspberry pi. Download the following repository on your Pi:
-
-https://github.com/the-raspberry-pi-guy/OLED
-
-then navigate to the folder with the terminal
-
-```
-cd ~/path/to/directory
-```
-
-and run the installation script
-
-```
-sh OLEDinstall.sh
-```
-
-There is also a [guide](https://learn.adafruit.com/adafruit-oled-displays-for-raspberry-pi/setting-up) on the Adafruit website if you get stuck.
+## Touch Screen Setup
+You can follow the [Raspberry Pi 7" Touch Screen Assembly Guide](https://thepihut.com/blogs/raspberry-pi-tutorials/45295044-raspberry-pi-7-touch-screen-assembly-guide) to get started connecting your touch screen to your pi.
 
 ## Running the Code
 
 First, make sure to download this repository on your raspberry pi. Once you do, navigate to the downloaded folder in the terminal:
 
 ```
-cd ~/path/to/directory
+cd ~/path/to/Spartender
 ```
 
 and install the dependencies
