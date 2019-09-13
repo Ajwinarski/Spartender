@@ -12,8 +12,6 @@
 #     ConfigScreen:
 #     # SettingsScreen:
 
-<TemplateMainButton>:
-
 
 <MainScreen>:
     name: 'main'
@@ -22,11 +20,12 @@
     drinksImage: drinksImg
     configImage: configImg
 
+    # Title
     Label:
         text: 'Spartender'
-        size_hint: (.7, .4)
+        size_hint: (.65, .4)
         pos_hint: {'center_x': .5, 'top': .95}
-        font_size: 124
+        font_size: 112
         font_name: 'assets/fonts/NCAAMichiganStSpartans.otf'
 
     LongpressButton:
@@ -147,14 +146,112 @@
         on_release: app.root.current = 'main'
         size_hint: (.18, .18)
         pos_hint: {'center_x': .5, 'top': 1}
-        background_color: 0, 0, 0, 0
         text: '[b]^[/b]\nBack'
         markup: True
         halign: 'center'
         valign: 'center'
+        background_color: 0, 0, 0, 0
         # text_size: cm(6), cm(4)
         font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: .75,.75
+        pos_hint: {'center_x': .5, 'center_y': .44}
+        spacing: 15
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            # Mixed Drinks Button
+            Button:
+                id: configBtn
+                on_press: root.manager.transition.direction = 'right'
+                on_release: app.root.current = 'mixedDrinks'
+                # size_hint: (.35, .65)
+                # pos_hint: {'x': .1, 'center_y': .44}
+                background_color: 255,255,255,1 #rgba(255,255,255,1)
+                color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
+                text: 'Mixed Drinks'
+                font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+                font_size: 32
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 15
+
+            # Shots Button
+            Button:
+                on_press: root.manager.transition.direction = 'left'
+                on_release: app.root.current = 'shotsDrinks'
+                # size_hint: (.35, .30)
+                # pos_hint: {'x': .55, 'top': .86}
+                background_color: 255,255,255,1 #rgba(255,255,255,1)
+                color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
+                text: 'Shots'
+                font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+                font_size: 32
+
+            # Soda Button
+            Button:
+                on_press: root.manager.transition.direction = 'up'
+                on_release: app.root.current = 'sodaDrinks'
+                # size_hint: (.35, .30)
+                # pos_hint: {'x': .55, 'y': .14}
+                background_color: 255,255,255,1 #rgba(255,255,255,1)
+                color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
+                text: 'Soda'
+                font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+                font_size: 32
+
+<MixedDrinksScreen>:
+    name: 'mixedDrinks'
+
+    # Back Button
+    Button:
+        on_press: root.manager.transition.direction = 'left'
+        on_release: app.root.current = 'drinks'
+        size_hint: (.18, .18)
+        pos_hint: {'right': 1, 'center_y': .5}
+        background_color: 0, 0, 0, 0
+        text: 'Back  >'
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+        font_size: 32
+
+    # Put mixed drinks list here
+
+<ShotsDrinksScreen>:
+    name: 'shotsDrinks'
+
+    # Back Button
+    Button:
+        on_press: root.manager.transition.direction = 'right'
+        on_release: app.root.current = 'drinks'
+        size_hint: (.18, .18)
+        pos_hint: {'left': 1, 'center_y': .5}
+        background_color: 0, 0, 0, 0
+        text: '<  Back'
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+        font_size: 32
+
+<SodaDrinksScreen>:
+    name: 'sodaDrinks'
+
+    # Back Button
+    Button:
+        on_press: root.manager.transition.direction = 'down'
+        on_release: app.root.current = 'drinks'
+        size_hint: (.18, .18)
+        pos_hint: {'center_x': .5, 'top': 1}
+        text: '[b]^[/b]\nBack'
+        markup: True
+        halign: 'center'
+        valign: 'center'
+        background_color: 0, 0, 0, 0
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+        font_size: 32
+
 
 <ConfigScreen>:
     name: 'config'
@@ -168,7 +265,7 @@
         background_color: 0, 0, 0, 0
         text: 'Back  >'
         font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
-        font_size: 28
+        font_size: 32
 
 <KeypadPopup>:
     name: 'keypadPopup'
