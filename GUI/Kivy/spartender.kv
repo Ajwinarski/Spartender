@@ -4,12 +4,15 @@
 #: import SwapTransition kivy.uix.screenmanager.SwapTransition
 
 # ScreenManager:
-#     #transition: FadeTransition()
-     # transition: SlideTransition(duration = 0.55)
-#     #transition: SwapTransition()
+#     transition: SlideTransition(duration = 0.55)
 #     MainScreen:
 #     DrinksScreen:
+#     MixedDrinksScreen:
+#     ShotsDrinksScreen:
+#     SodaDrinksScreen:
 #     ConfigScreen:
+#     KeypadPopup:
+#     # KeyboardPopup:
 #     # SettingsScreen:
 
 
@@ -22,43 +25,59 @@
 
     # Title
     Label:
+        id: title
         text: 'Spartender'
         size_hint: (.65, .4)
         pos_hint: {'center_x': .5, 'top': .95}
-        font_size: 112
+        font_size: 127
+        color: app.secondary
         font_name: 'assets/fonts/NCAAMichiganStSpartans.otf'
 
+    # Hidden button to get back to the settings
     LongpressButton:
         long_press_time: 3
         # on_press: lambda w: setattr(w, 'text', 'Pressed')
         # on_long_press: lambda w: setattr(w, 'text', 'Long press')
-        on_long_press: app.open_settings()
+        # on_long_press: app.open_settings()
+        on_long_press: root.show_pin_popup(type = 'settings')
         size_hint: (.05, .05)
         pos_hint: {'left': 1, 'top': 1}
-        background_color: 0, 0, 0, 0
-        color: 1,1,1,1
+        background_color: 0,0,0,0
+        # color: 1,1,1,1
         text: ''
-        font_size: 12
+        font_size: 22
 
     # Quit Button
     Button:
         on_press: quit()
         size_hint: (.05, .05)
         pos_hint: {'right': 1, 'top': 1}
-        background_color: 0, 0, 0, 0
+        background_color: (0.09411,0.270588,0.231372,1) #app.primary
         color: 1,1,1,1
         text: 'x'
-        font_size: 12
+        font_size: 22
+
+    # # Main Screen Buttons Layout
+    # BoxLayout:
+    #     orientation: 'horizontal'
+    #     size_hint: .9, .5
+    #     pos_hint: {'center_x': .5, 'y': 0.06}
+    #     # padding_left: 10
+    #     # padding_right: 10
 
     # Config Button
     Button:
         id: configBtn
         on_press: root.do_pressed('c', './assets/design/ConfigBtnPressed.PNG'); root.manager.transition.direction = 'right'
         on_release: root.do_released('c', './assets/design/ConfigBtn.PNG'); app.root.current = 'config'
-        on_state: print("Current state: {}".format(self.state))
-        size_hint: (.25, .4)
-        pos_hint: {'x': .05, 'y': .08}
-        background_color: 0,0,0,0 #rgba(255,255,255,1)
+        #on_state: print("Current state: {}".format(self.state))
+        borderless: True
+        size_hint: (.26, .45)
+        pos_hint: {'x': .04, 'y': .08}
+
+        # background_color: app.primary #rgba(255,255,255,1)
+        background_color: (0,0,0,0)
+
         # always_release: True
         # color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
         # text: 'Config'
@@ -68,27 +87,30 @@
         Image:
             id: configImg
             source: './assets/design/ConfigBtn.PNG'
+            size: self.parent.width, self.parent.height
             x: self.parent.x
             y: self.parent.y
-            size: self.parent.width, self.parent.height
+
 
     # Drinks Button
     Button:
         id: drinksBtn
 
         on_press: root.do_pressed('d', './assets/design/DrinksBtnPressed.PNG'); root.manager.transition.direction = 'up'
-        on_release: root.do_released('d', './assets/design/DrinksBtn.PNG'); app.root.current = 'drinks'
+        on_release: root.do_released('d', './assets/design/DrinksBtn.PNG'); root.goto_drinks() #app.root.current = 'drinks'
         # on_state: print("my current state is {}".format(self.state))
-        size_hint: (.35, .4)
+        size_hint: (.38, .45)
         pos_hint: {'center_x': .5, 'y': .08}
-        background_color: 0,0,0,0 #rgba(255,255,255,1)
+        # background_color: app.primary #rgba(255,255,255,1)
+        background_color: (0,0,0,0)
 
         Image:
             id: drinksImg
             source: './assets/design/DrinksBtn.PNG'
+            size: self.parent.width, self.parent.height
             x: self.parent.x
             y: self.parent.y
-            size: self.parent.width, self.parent.height
+
 
     # Settings Button
     # TODO: Add animations to the pictures
@@ -98,8 +120,8 @@
         on_press: root.do_pressed('s', './assets/design/SettingsBtnPressed.PNG'); app.root.transition = SlideTransition(direction='right')
         on_release: root.do_released('s', './assets/design/SettingsBtn.PNG'); app.open_settings()
         background_color: (0,0,0,0)
-        size_hint: (.25, .4)
-        pos_hint: {'x': .70, 'y': .08}
+        size_hint: (.26, .45)
+        pos_hint: {'right': .96, 'y': .08}
 
         Image:
             id: settingsImg
@@ -108,37 +130,20 @@
             y: self.parent.y
             size: self.parent.width, self.parent.height
 
-
-
-
-    # Button:
-    #     id: settingsBtn
-    #
-    #     on_press: root.manager.transition.direction = 'left'
-    #     # #on_release: app.root.current = 'settings'
-    #     on_release: app.open_settings()
-    #     size_hint: (.25, .4)
-    #     pos_hint: {'x': .70, 'y': .08}
-    #
-    #     Image:
-    #         source: "assets/design/SettingsBtn.PNG"
-    #         center_x: self.parent.center_x
-    #         center_y: self.parent.center_y
-    #         size_hint_x: 1
-    #         size_hint_y: 1
-            # on_press: root.manager.transition.direction = 'left'
-            #on_release: app.root.current = 'settings'
-            # on_release: app.open_settings()
-            # size_hint: (.25, .4)
-            # pos_hint: {'x': .70, 'y': .08}
-            # background_color: 255,255,255,1 #rgba(255,255,255,1)
-            # color: 0.09411,0.270588,0.231372,1 #rgba(24,69,59,1)
-            # text: 'Settings'
-            # font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
-            # font_size: 32
-
 <DrinksScreen>:
     name: 'drinks'
+    nameText: nameTxt
+    creditsText: credTxt
+
+    Label:
+        id: nameTxt
+        pos_hint: {'left': 1, 'top': 1}
+        text: 'NAME HERE'
+
+    Label:
+        id: credTxt
+        pos_hint: {'right': 1, 'top': 1}
+        text: 'CREDITS HERE'
 
     # Back Button
     Button:
@@ -220,6 +225,13 @@
         font_size: 32
 
     # Put mixed drinks list here
+    BoxLayout:
+        orientation: 'vertical'
+        ScrollView:
+            text: "Work"
+            values: "Work", "Home", "Mobile", "Skype"
+            size_hint: (None, None)
+            size: (200, 200)
 
 <ShotsDrinksScreen>:
     name: 'shotsDrinks'
@@ -252,7 +264,6 @@
         font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
 
-
 <ConfigScreen>:
     name: 'config'
 
@@ -267,6 +278,74 @@
         font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
 
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 10
+        size_hint: .85, .9
+        pos_hint: {'left': .85, 'center_y': .5}
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
+            size_hint_y: .65
+
+            Slider:
+                id: slider_vodka
+                min: 0
+                max: 1750
+                step: 1
+                # background_width: sp(50)
+                # value_track: True
+                # value_track_color: 0, 0, 0, 0
+                orientation: 'vertical'
+
+            Slider:
+                id: slider_rum
+                min: 0
+                max: 1750
+                step: 1
+                orientation: 'vertical'
+
+            Slider:
+                id: slider_soda1
+                min: 0
+                max: 1750
+                step: 1
+                orientation: 'vertical'
+
+            Slider:
+                id: slider_soda2
+                min: 0
+                max: 1750
+                step: 1
+                orientation: 'vertical'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
+            size_hint_y: .25
+
+            Label:
+                id: label_vodka_value
+                halign: 'center'
+                text: '%smL\nVodka' % int(slider_vodka.value) if slider_vodka.value else '0mL\nVodka'
+
+            Label:
+                id: label_rum_value
+                halign: 'center'
+                text: '%smL\nRum' % int(slider_rum.value) if slider_rum.value else '0mL\nRum'
+
+            Label:
+                id: label_soda1_value
+                halign: 'center'
+                text: '%smL\nSprite' % int(slider_soda1.value) if slider_soda1.value else '0mL\nSprite'
+
+            Label:
+                id: label_soda2_value
+                halign: 'center'
+                text: '%smL\nCoke' % int(slider_soda2.value) if slider_soda2.value else '0mL\nCoke'
+
+
 <KeypadPopup>:
     name: 'keypadPopup'
 
@@ -277,6 +356,9 @@
 
     size_hint: .8, .8
 
+    # Opens settings after long press is successful
+    on_verification: app.open_settings()
+
     # This is for all of the layouts
     BoxLayout:
         orientation: 'vertical'
@@ -285,8 +367,8 @@
         # This is for the entered Pin Numbers
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 5
-            # pos_hint: {'center_x': .5, 'top': 1}
+            spacing: 0
+            pos_hint: {'center_x': .5, 'top': .9}
 
             Label:
                 id: pin1

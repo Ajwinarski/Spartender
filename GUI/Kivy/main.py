@@ -1,5 +1,9 @@
 import kivy
+import json
+import base64
+import csv
 from kivy import require
+from tinydb import TinyDB, Query
 
 from kivy.app import App
 from kivy.core.window import Window
@@ -20,21 +24,36 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.config import ConfigParser
 from kivy.factory import Factory
+from kivy.metrics import dp, sp
 from kivy.properties import NumericProperty, StringProperty, BooleanProperty,\
     ListProperty, ObjectProperty
 
 # Imports the json settings
-from settingsjson import settings_json
+from settingsjson import settings_json, users_json
 from functools import partial
+
+# Define the config parser for settings
+config = ConfigParser()
+
+# Define the Database
+
+# Define the Screen Manager
+sm = ScreenManager(transition = SlideTransition(duration = 0.70))
+
+# Globals
+green = (0.09411,0.270588,0.231372,1)   #rgba(24,69,59,1) / 255 (Forest Green)
+white = (1,1,1,1)                       #rbga(0,0,0,1)
+currentUserName = ''                    # Current user name
+currentUserCredits = 0                  # Current user credits
 
 # Set the window color and to fullscreen without the top menu
 from kivy.core.window import Window
 Window.size = (800, 480)
-Window.clearcolor = (0.09411,0.270588,0.231372,1) #rgba(24,69,59,1) / 255
 Window.borderless = True
+Window.clearcolor = green
 
-# Define the config var for settings
-config = ConfigParser()
+# Mark as true to see wha the program is doing in detail
+commenting = False
 
 class MyKeyboardListener(Screen):
 
@@ -43,17 +62,19 @@ class MyKeyboardListener(Screen):
         self._keyboard = Window.request_keyboard(
                             self._keyboard_close, self, 'text')
 
-        # if self._keyboard.widget:
+        if self._keyboard.widget:
             # If it exists, this widget is a VKeyboard object which you can use
             # to change the keyboard layout.
-        vkeyboard = self._keyboard.widget
+            vkeyboard = self._keyboard.widget
 
             # Define the keyboard layout
-        vkeyboard.layout = 'numeric.json'
-        vkeyboard.size_hint = (.65,.4)
-        vkeyboard.pos_hint_x = .5
-            # for layout in vkeyboard.available_layouts:
-            #     print(layout)
+            vkeyboard.layout = 'numeric.json'
+            vkeyboard.size_hint = (.65,.4)
+            vkeyboard.pos_hint_x = .5
+
+        if commenting:
+            for layout in vkeyboard.available_layouts:
+                print(layout)
 
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
@@ -80,71 +101,8 @@ class MyKeyboardListener(Screen):
 
     pass
 
-class IconButton(ButtonBehavior, Image):
-
-    pass
-
-    # def _keyboard_open(self):
-    #     # self._keyboard = Window.request_keyboard(
-    #     #                     self._keyboard_close, self, 'text')
-    #
-    #     if self._keyboard.widget:
-    #         # If it exists, this widget is a VKeyboard object which you can use
-    #         # to change the keyboard layout.
-    #         vkeyboard = self._keyboard.widget
-    #
-    #         # Define the keyboard layout
-    #         vkeyboard.layout = 'numeric.json'
-    #         vkeyboard.size_hint = (.65,.4)
-    #         # for layout in vkeyboard.available_layouts:
-    #         #     print(layout)
-    #
-    #     self._keyboard.bind(on_key_down=self._on_keyboard_down)
-    #     pass
-
-        # if self._keyboard.widget:
-            # If it exists, this widget is a VKeyboard object which you can use
-            # to change the keyboard layout.
-            # vkeyboard = self._keyboard.widget
-            # vkeyboard.layout = 'numeric.json'
-            # vkeyboard.layout = 'qwerty'
-            # vkeyboard.size_hint_x = .5
-            # vkeyboard.size_hint = (.5,.5)
-            # vkeyboard.margin_hint = [0,0,0,0]
-            # vkeyboard.center_x = 0.5
-            # vkeyboard.pos_hint = {'center_x': .5, 'y': 30}
-            # vkeyboard.background_color = 255,255,255,0
-            # vkeyboard.key_background_color = 0.09411,0.270588,0.231372,1
-
-        # self._keyboard.bind(on_key_down=self._on_keyboard_down)
-        # # vkeyboard = self._keyboard.widget
-        # self._keyboard.layout = 'numeric.json'
-        # # vkeyboard.size_hint_x = .5
-        # self._keyboard.size_hint = (.5,.5)
-        # self._keyboard.margin_hint = [0,0,0,0]
-
-    # def _keyboard_close(self):
-    #     print('Keyboard closed!')
-    #     self._keyboard.unbind(on_key_down=self._on_keyboard_down)
-    #     self._keyboard = None
-    #
-    # def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-    #     print('The key', keycode, 'has been pressed')
-    #     print(' - text is %r' % keycode[1])
-    #     print(' - modifiers are %r' % modifiers)
-    #
-    #     # Keycode is composed of an integer + a string
-    #     # If we hit escape, release the keyboard
-    #     if keycode[1] == 'escape':
-    #         keyboard.release()
-    #
-    #     # Return True to accept the key. Otherwise, it will be used by
-    #     # the system.
-    #     return True
-    #
-    # pass
-
 class LongpressButton(Factory.Button):
+
     __events__ = ('on_long_press', )
 
     long_press_time = Factory.NumericProperty(1)
@@ -162,32 +120,71 @@ class LongpressButton(Factory.Button):
     def on_long_press(self, *largs):
         pass
 
+    def do_request_pin(self):
+        KeypadPopup(title='Enter your pin').open()
+
+
 """ Menu Screen Definition """
 
 class MainScreen(Screen):
 
     settingsImage = ObjectProperty()
-    drinksImage = ObjectProperty()
-    configImage = ObjectProperty()
+    drinksImage   = ObjectProperty()
+    configImage   = ObjectProperty()
 
+    # Darkens button color on click
     def do_pressed(self, button, imagePath):
         if button == 's': self.settingsImage.source = imagePath
         elif button == 'd': self.drinksImage.source = imagePath
         else: self.configImage.source = imagePath
-        # print("Pressed")
+        if commenting: print("Pressed")
 
+    # Lightens button color on release
     def do_released(self, button, imagePath):
         if button == 's': self.settingsImage.source = imagePath
         elif button == 'd': self.drinksImage.source = imagePath
         else: self.configImage.source = imagePath
-        # print("Released")
+        if commenting: print("Released")
+
+    # Shows pin popup for drinks
+    def show_pin_popup(self, type = 'drinks'):
+        popup = KeypadPopup(title='Enter your pin')
+        popup.popupType = type
+        popup.open()
+
+    def goto_drinks(self):
+
+        # if settings_json.get('settings', 'pinMode'):
+        # # if config.get('settings', 'pinMode'):
+        #     self.show_pin_popup()
+        # else:
+        #     # Transition to drinks page
+        #     sm.current = "drinks"
+
+        for section in config.sections():
+            print("Section: %s" % section)
+
+        self.show_pin_popup()
 
     pass
 
 class DrinksScreen(Screen):
+
+    nameText    = ObjectProperty()
+    creditsText = ObjectProperty()
+
+    # nameText.text = currentUserName
+    # creditsText.text = currentUserCredits
+
     pass
 
 class ConfigScreen(Screen):
+
+    vodkaSlider = NumericProperty()
+    rumSlider   = NumericProperty()
+    soda1Slider = NumericProperty()
+    soda2Slider = NumericProperty()
+
     pass
 
 class MixedDrinksScreen(Screen):
@@ -200,15 +197,31 @@ class SodaDrinksScreen(Screen):
     pass
 
 class KeypadPopup(Popup):
+    __events__ = ('on_verification', )
+
     pin1Observer = ObjectProperty()
     pin2Observer = ObjectProperty()
     pin3Observer = ObjectProperty()
     pin4Observer = ObjectProperty()
-
+    popupType = 'drinks'
+    enteredPin = ""
+    encodedStr = ""
+    user = "name"
+    credits = 0
     pinNums = []
 
+    def _do_verification(self):
+        self.dispatch('on_verification')
+
+    def on_verification(self, *largs):
+        pass
+
+    # Logic for each pin pressed
     def do_pin_pressed(self, num):
+
         self.pinNums.append(num)
+
+        if commenting: print("Number", num, "was pressed")
 
         # Add the stars based on how many pins have been entered
         if len(self.pinNums) == 1:
@@ -219,15 +232,30 @@ class KeypadPopup(Popup):
             self.change_text('a', self.pin3Observer)
         elif len(self.pinNums) == 4:
             self.change_text('a', self.pin4Observer)
+            self.enteredPin = ''.join(self.pinNums)
+            self.do_pin_encoding()
+            if self.popupType == 'create': self.do_db_insertion()
+            self.do_db_read()
             self.do_check_pin()
 
+
+    # Visualization of the number of entered pins
     def change_text(self, func, observer):
+
         if func == 'a':
             observer.text = '*'
         else:
             observer.text = '____'
 
+    # Encodes the 4-digit pin
+    def do_pin_encoding(self):
+        # Encode the entered pin
+        encodedBytes    = base64.b64encode(self.enteredPin.encode("utf-8"))
+        self.encodedStr = str(encodedBytes, "utf-8")
+
+    # Deletes an entered pin
     def do_pin_deleted(self):
+
         self.pinNums = self.pinNums[:-1]
 
         # Remove the stars based on how many pins have been entered
@@ -240,24 +268,75 @@ class KeypadPopup(Popup):
         elif len(self.pinNums) == 3:
             self.change_text('d', self.pin4Observer)
 
+    # Used to insert data in the Database
+    def do_db_insertion(self):
+        # Open the database
+        f = open('database.csv', 'a')
+
+        # Define the items per line and make a writer
+        rows = ['pin', 'name', 'credits']
+        writer = csv.DictWriter(f, fieldnames=rows)
+
+        # Write the information to the file
+        # writer.writeheader()      # Writes the fieldnames to top of file
+        writer.writerow({'pin'    : self.encodedStr,
+                         'name'   : self.user,
+                         'credits': self.credits})
+
+    # Used to check for a pin in the Database
+    def do_db_read(self):
+        # Open the database
+        f = open('database.csv', 'r')
+
+        # Search the file for the pin
+        with f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row['pin'] == self.encodedStr:
+                    # print(row['pin'][:-2])
+                    currentUserName = row['name']
+                    currentUserCredits = row['credits']
+                    #set_user_info(name = row['name'], credits = row['credits'])
+                    return True
+            return False
         pass
 
+    # Write the current users info to be used in the session
+    # def set_user_info(self, name, credits):
+    #     # Write the current users info to be used during the session
+    #     self.userInfo = [name, credits]
+
+    # Check the Database for the entered pin
     def do_check_pin(self):
+    # TODO: Check database for pin numbers
 
-        # TODO: Check database for pin numbers
+        # Used for transitioning to drinks page on successful pin
+        if self.do_db_read() and self.popupType == 'drinks':
 
-        # Close the Popup
-        self.dismiss()
+            # Set the users data to screen
+
+
+            ### TODO: After a user enters in their pin, personalize their drinks menu with name and credits
+
+            # Transition to drinks page
+            sm.current = "drinks"
+
+        # Used for transitioning to settings page on successful pin
+        elif self.encodedStr == 'MTEzMA==' and self.popupType == 'settings':
+            self._do_verification()
 
         # Reset the pinNums string
-        self.pinNums = []
+        self.pinNums.clear()
+
         self.change_text('d', self.pin1Observer)
         self.change_text('d', self.pin2Observer)
         self.change_text('d', self.pin3Observer)
         self.change_text('d', self.pin4Observer)
 
-        pass
+        # Close the Popup
+        self.dismiss()
 
+        pass
 
     pass
 
@@ -271,14 +350,50 @@ class KeypadPopup(Popup):
 
 class SpartenderApp(App):
 
-    screen_names = ListProperty([])
-    sm = ScreenManager(transition = SlideTransition(duration = 0.55))
-    # keypad_Popup = KeypadPopup()
+    # screen_names = ListProperty([])
+    # sm = ScreenManager(transition = SlideTransition(duration = 0.55))
+
+    primary = green
+    secondary = white
+
 
     # keyboard = Popup(title='Enter Your Pin',
     #     content=Button(text='1'),
     #     size_hint=(None, None), size=(360, 360))
 
+    # Info for the Settings config
+    def build_config(self, config):
+
+        # Initialize the Settings tab
+        config.setdefaults('settings', {
+            'partyMode': False,
+            'pinMode': True,
+            'darkMode': True})
+            # 'numericexample': 10,
+            # 'optionsexample': 'option2',
+            # 'stringexample': 'some_string',
+            # 'pathexample': '/some/path'
+
+        # Initialize the Users tab
+        config.setdefaults('users', {
+            'entername': '',
+            'enterpin': False,
+            'userslist': ''})
+
+    # Add the Settings pages
+    def build_settings(self, settings):
+
+        settings.add_json_panel('General',
+                                self.config,
+                                data=settings_json)
+        settings.add_json_panel('Users',
+                                self.config,
+                                data=users_json)
+        # Use this is modify the settings appearance
+        # settings.pos_hint = ({"right": 1, "center_y": .5})
+        # settings.size_hint = (0.9, 0.9)
+
+    # Setup the Settings and Pages
     def build(self):
 
         # FIX THE SETTINGS PANEL SO THAT THERE IS A quit()
@@ -310,50 +425,63 @@ class SpartenderApp(App):
         # Additional Pages
         self.keypadPage = KeypadPopup()
 
+        # Make the global Screen Manager
+        self.sm = sm
+
         # Add the screen widgets
+
+        # # Main screen pages
+        # self.sm.add_widget(mainPage)
+        # self.sm.add_widget(drinksPage)
+        # self.sm.add_widget(configPage)
+        #
+        # # Drinks screen pages
+        # self.sm.add_widget(mixedDrinksPage)
+        # self.sm.add_widget(shotsDrinksPage)
+        # self.sm.add_widget(sodaDrinksPage)
+
         # Main screen pages
-        self.sm.add_widget(mainPage)
-        self.sm.add_widget(drinksPage)
-        self.sm.add_widget(configPage)
+        sm.add_widget(mainPage)
+        sm.add_widget(drinksPage)
+        sm.add_widget(configPage)
 
         # Drinks screen pages
-        self.sm.add_widget(mixedDrinksPage)
-        self.sm.add_widget(shotsDrinksPage)
-        self.sm.add_widget(sodaDrinksPage)
+        sm.add_widget(mixedDrinksPage)
+        sm.add_widget(shotsDrinksPage)
+        sm.add_widget(sodaDrinksPage)
 
         # Additional screens
         # self.sm.add_widget(keypadPage)
 
+        # # Set the first page to be main
+        # self.sm.current = "main"
+
         # Set the first page to be main
-        self.sm.current = "main"
+        sm.current = "main"
 
         return self.sm
 
+    # Hides the given widget from the view
     def hideWidget(self, wid, hide):
+
         if hide:
             wid.opacity, wid.disabled = 0, True
         elif not hide:
             wid.opacity, wid.disabled = 1, False
         pass
 
-    def build_config(self, config):
-        config.setdefaults('settings', {
-            'partyMode': False,
-            'pinMode': True,
-            'numericexample': 10,
-            'optionsexample': 'option2',
-            'stringexample': 'some_string',
-            'pathexample': '/some/path'})
+    # Swap the primary and secondary colors
+    def changeColorMode(self, wid, _color):
 
-    def build_settings(self, settings):
-        settings.add_json_panel('Spartender Settings',
-                                self.config,
-                                data=settings_json)
-        # Use this is modify the settings appearance
-        # settings.pos_hint = ({"right": 1, "center_y": .5})
-        # settings.size_hint = (0.9, 0.9)
+        for item in wid:
+            item.color = _color
+        # Swaps the primary and secondary colors
+        # self.primary, self.secondary = self.secondary, self.primary
+        # colorObject.color = self.primary
 
+    # Triggered when a setting has been changed
     def on_config_change(self, config, section, key, value):
+
         if config is self.config:
             token = (section, key)
 
@@ -363,43 +491,78 @@ class SpartenderApp(App):
                 mainScreen = self.sm.get_screen('main')
                 configWid = mainScreen.ids.configBtn
                 settingsWid = mainScreen.ids.settingsBtn
+                drinksButton = mainScreen.ids.drinksBtn
+                drinksImage = mainScreen.ids.drinksImg
                 widgets = [configWid, settingsWid]
 
                 # Call the function to hide config button here
                 for wid in widgets:
                     self.hideWidget(wid, int(value))
 
+                if int(value):
+                    drinksButton.size_hint = (.9, 45)
+                    drinksImage.source = './assets/design/DrinksBtnLarge.PNG'
+                else:
+                    drinksButton.size_hint = (.38, .45)
+                    drinksImage.source = './assets/design/DrinksBtn.PNG'
+
                 # Used to check the partyMode value in our .ini file
                 # print(config.get('settings', 'partyMode'))
 
             # Logic for Pin Mode
             elif token == ('settings', 'pinMode'):
-                print('Pin mode set to ', value)
-                # Keyboard widget definition
-                # keyboard = MyKeyboardListener(name='keypad')
 
+                if commenting: print('Pin mode set to ', value)
 
-                def callMe():
-                    print("keyboard closed")
-                    pass
+                # if int(value):
+                #     self.keypadPage.open()
+
+            # Logic for dark Mode
+            elif token == ('settings', 'darkMode'):
+
+                widgets = []
+                # List the pages and items on those pages
+                # that need to be changed here
+
+                ## Main Screen widgets
+                mainScreen = self.sm.get_screen('main')
+                titleLabel = mainScreen.ids.title
+                # quitButton =
+                # widgets.append(titleLabel)
+
+                ## Drink Screen widgets
+                drinksScreen = self.sm.get_screen('drinks')
+                nameLabel = drinksScreen.ids.nameTxt
+                # widgets.append(nameLabel)
+
+                ## Drink Screen widgets
+                configScreen = self.sm.get_screen('config')
+                vodkaLabel = configScreen.ids.label_vodka_value
+                rumLabel = configScreen.ids.label_rum_value
+                soda1Label = configScreen.ids.label_soda1_value
+                soda2Label = configScreen.ids.label_soda2_value
+                widgets = [titleLabel, nameLabel, vodkaLabel,
+                            rumLabel, soda1Label, soda2Label]
 
                 if int(value):
-                    # Open the keyboard
-                    # keyboard = MyKeyboardListener(name='keyboard')
+                    self.changeColorMode(widgets, self.secondary)
+                    Window.clearcolor = self.primary
 
-                    # self.sm.current = 'keypadNums'
-                    # keyboard._keyboard_open()
-                    # Window.request_keyboard(callMe, self, input_type='tel')
-                    # Window.add_widget(MyKeyboardListener(name='keypad'))
+                else:
+                    self.changeColorMode(widgets, self.primary)
+                    Window.clearcolor = self.secondary
 
-                    self.keypadPage.open()
+            # Logic for new users entering there pins
+            elif token == ('users', 'enterpin'):
 
-                # if not int(value):
-                    # Close the keyboard
-                    # keyboard._keyboard_close()
-                    # keyboard.unbind(on_key_down=self._on_keyboard_down)
-                    # Window.release_all_keyboards()
-
+                if int(value):
+                    config.set('users', 'enterpin', False)
+                    name = config.get('users', 'entername')
+                    settingsPin = KeypadPopup(title='Enter your pin')
+                    settingsPin.popupType = 'create'
+                    if name is not 'name':
+                        settingsPin.user = name
+                    settingsPin.open()
 
 
 if __name__ == '__main__':
