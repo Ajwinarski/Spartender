@@ -3,7 +3,7 @@ A smart bartender used to pour perfectly measured drinks for you. Built with a R
 
 Make sure the following are installed:
 * Python >= 2.7 (should already be installed on most Raspberry Pi)
-  * Optionally: You can install and use Python >= 3.4 if Python >= 2.7 is installed
+  * Optionally: You can install and use Python >= 3.4 if Python >= 2.7 is not installed
 * [pip](https://www.raspberrypi.org/documentation/linux/software/python.md)
 
 ### I2C
@@ -65,7 +65,8 @@ Holds all of the possible drink options. Drinks are filtered by the values in th
 	}
 ```
 
-`name` specifies a name that will be displayed on the OLED menu. This name doesn't have to be unique, but it will help the user identify which drink has been selected. `ingredients` contains a map of beverage options that are available in `drink_options`. Each key represents a possible drink option. The value is the amount of liquid in mL. *Note: you might need a higher value for carbonated beverages since some of the CO2 might come out of solution while pumping the liquid.*
+`name` specifies a name that will be displayed on the drinks menu. This name doesn't have to be unique, but it will help the user identify which drink has been selected. 
+`ingredients` contains a map of beverage options that are available in `drink_options`. Each key represents a possible drink option. The value is the amount of liquid in mL. *Note: you might need a higher value for carbonated beverages since some of the CO2 might come out of solution while pumping the liquid.*
 
 `drink_options` entries have the following format:
 
