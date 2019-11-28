@@ -135,15 +135,44 @@
     nameText: nameTxt
     creditsText: credTxt
 
+    name: 'drinks'
+    nameText: nameTxt
+    creditsText: credTxt
+
     Label:
         id: nameTxt
-        pos_hint: {'left': 1, 'top': 1}
-        text: 'NAME HERE'
+        size_hint: (.35, .18)
+        pos_hint: {'x': .06, 'top': .99}
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+        font_size: 24
+        background_color: (.4,.4,.4,1)
+        text: 'NameError'
+        text_size:self.size
+        halign:'left'
+        valign:'middle'
+        # canvas.before:
+        #     Color:
+        #         rgba: 1, .5, 0, 1
+        #     Rectangle:
+        #         pos: self.pos
+        #         size: self.size
 
     Label:
         id: credTxt
-        pos_hint: {'right': 1, 'top': 1}
-        text: 'CREDITS HERE'
+        size_hint: (.35, .18)
+        pos_hint: {'right': .94, 'top': .99}
+        font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
+        font_size: 24
+        text: 'CreditsError'
+        text_size:self.size
+        halign:'right'
+        valign:'middle'
+        # canvas.before:
+        #     Color:
+        #         rgba: 1, .5, 0, 1
+        #     Rectangle:
+        #         pos: self.pos
+        #         size: self.size
 
     # Back Button
     Button:
@@ -213,6 +242,24 @@
 <MixedDrinksScreen>:
     name: 'mixedDrinks'
 
+    # Put mixed drinks list here
+    # ScrollView:
+    #     BoxLayout:
+    #         orientation: 'vertical'
+    #         text: "Work"
+    #         values: "Work", "Home", "Mobile", "Skype"
+    #         # size_hint: (.25, .25)
+    #         # size: (200, 200)
+    RecycleView:
+        data:[{'text': str(x),'size_hint':(1,None)} for x in range(50)]
+        viewclass: 'Button'
+        RecycleBoxLayout:
+            size_hint: (.5,None)
+            background_color: [.5,.5,.5,1]
+            pos_hint: {"x":.15,"y":.85}
+            height: self.minimum_height
+            orientation: 'vertical'
+
     # Back Button
     Button:
         on_press: root.manager.transition.direction = 'left'
@@ -223,15 +270,6 @@
         text: 'Back  >'
         font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
-
-    # Put mixed drinks list here
-    BoxLayout:
-        orientation: 'vertical'
-        ScrollView:
-            text: "Work"
-            values: "Work", "Home", "Mobile", "Skype"
-            size_hint: (None, None)
-            size: (200, 200)
 
 <ShotsDrinksScreen>:
     name: 'shotsDrinks'

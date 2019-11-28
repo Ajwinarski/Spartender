@@ -1,9 +1,10 @@
 import kivy
 import json
 import base64
+import random
 import csv
 from kivy import require
-from tinydb import TinyDB, Query
+# from tinydb import TinyDB, Query
 
 from kivy.app import App
 from kivy.core.window import Window
@@ -123,7 +124,6 @@ class LongpressButton(Factory.Button):
     def do_request_pin(self):
         KeypadPopup(title='Enter your pin').open()
 
-
 """ Menu Screen Definition """
 
 class MainScreen(Screen):
@@ -170,11 +170,24 @@ class MainScreen(Screen):
 
 class DrinksScreen(Screen):
 
-    nameText    = ObjectProperty()
-    creditsText = ObjectProperty()
+    nameText    = ObjectProperty(None, allownone=True)
+    creditsText = ObjectProperty(None, allownone=True)
 
-    # nameText.text = currentUserName
-    # creditsText.text = currentUserCredits
+    def on_pre_enter(self):
+        self.updateWelcomeMessages()
+
+    def updateWelcomeMessages(self):
+        curName = currentUserName
+        potentialNameResponses = [f'{curName}',f'Drink up, {curName}',
+            f'Essketit, {curName}', f'Welcome, {curName}', f'Drink Responsibly, {curName}']
+        credT = f'Credits: {currentUserCredits}'
+        self.updateText(random.choice(potentialNameResponses), credT)
+        pass
+
+    def updateText(self, nameT, creditsT):
+        self.nameText.text = nameT
+        self.creditsText.text = creditsT
+        pass
 
     pass
 
@@ -235,7 +248,6 @@ class KeypadPopup(Popup):
             self.enteredPin = ''.join(self.pinNums)
             self.do_pin_encoding()
             if self.popupType == 'create': self.do_db_insertion()
-            self.do_db_read()
             self.do_check_pin()
 
 
@@ -294,9 +306,10 @@ class KeypadPopup(Popup):
             for row in reader:
                 if row['pin'] == self.encodedStr:
                     # print(row['pin'][:-2])
+                    global currentUserName
                     currentUserName = row['name']
+                    global currentUserCredits
                     currentUserCredits = row['credits']
-                    #set_user_info(name = row['name'], credits = row['credits'])
                     return True
             return False
         pass
