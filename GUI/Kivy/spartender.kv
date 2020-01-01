@@ -135,10 +135,6 @@
     nameText: nameTxt
     creditsText: credTxt
 
-    name: 'drinks'
-    nameText: nameTxt
-    creditsText: credTxt
-
     Label:
         id: nameTxt
         size_hint: (.35, .18)
@@ -250,15 +246,16 @@
     #         values: "Work", "Home", "Mobile", "Skype"
     #         # size_hint: (.25, .25)
     #         # size: (200, 200)
-    RecycleView:
-        data:[{'text': str(x),'size_hint':(1,None)} for x in range(50)]
-        viewclass: 'Button'
-        RecycleBoxLayout:
-            size_hint: (.5,None)
-            background_color: [.5,.5,.5,1]
-            pos_hint: {"x":.15,"y":.85}
-            height: self.minimum_height
-            orientation: 'vertical'
+    # RecycleView:
+    #     # data:[{'text': str(x),'size_hint':(1,None), 'on_press': root.popupTest(x)} for x in range(50)]
+    #     data:[{'text': str(x),'size_hint':(1,None)} for x in range(20)]
+    #     viewclass: 'Button'
+    #     RecycleBoxLayout:
+    #         size_hint: (.5,None)
+    #         # background_color: [.5,.5,.5,1]
+    #         pos_hint: {"x":.15,"y":.85}
+    #         height: self.minimum_height
+    #         orientation: 'vertical'
 
     # Back Button
     Button:
@@ -270,6 +267,7 @@
         text: 'Back  >'
         font_name: 'assets/fonts/Avenir/AvenirNextLTPro-HeavyCn.otf'
         font_size: 32
+
 
 <ShotsDrinksScreen>:
     name: 'shotsDrinks'

@@ -4,6 +4,7 @@ import base64
 import random
 import csv
 from kivy import require
+
 # from tinydb import TinyDB, Query
 
 from kivy.app import App
@@ -31,6 +32,8 @@ from kivy.properties import NumericProperty, StringProperty, BooleanProperty,\
 
 # Imports the json settings
 from settingsjson import settings_json, users_json
+# ******** Import the drinks json list ********
+from drinks import drinks_list, drinks_options
 from functools import partial
 
 # Define the config parser for settings
@@ -161,6 +164,8 @@ class MainScreen(Screen):
         #     # Transition to drinks page
         #     sm.current = "drinks"
 
+        # print("Here...")
+
         for section in config.sections():
             print("Section: %s" % section)
 
@@ -178,8 +183,11 @@ class DrinksScreen(Screen):
 
     def updateWelcomeMessages(self):
         curName = currentUserName
-        potentialNameResponses = [f'{curName}',f'Drink up, {curName}',
-            f'Essketit, {curName}', f'Welcome, {curName}', f'Drink Responsibly, {curName}']
+        potentialNameResponses = [f'{curName}',
+                                  f'Drink up, {curName}',
+                                  f'Essketit, {curName}',
+                                  f'Welcome, {curName}',
+                                  f'Drink Responsibly, {curName}']
         credT = f'Credits: {currentUserCredits}'
         self.updateText(random.choice(potentialNameResponses), credT)
         pass
@@ -201,6 +209,24 @@ class ConfigScreen(Screen):
     pass
 
 class MixedDrinksScreen(Screen):
+
+    mixed_drinks = json.loads(drinks_list)
+
+    def on_pre_enter(self):
+        self.tester()
+
+    # def popupTest(self, x):
+    #     popup = Popup(title=f'Test popup {x}', content=Label(text='Hello world'), size_hint=(None, None), size=(400, 400))
+    #     popup.open()
+
+    def get_mixed_drinks(self):
+        pass
+
+    def tester(self):
+        # for
+        print(self.mixed_drinks["name"])
+        print("Made it here.")
+
     pass
 
 class ShotsDrinksScreen(Screen):
@@ -391,7 +417,8 @@ class SpartenderApp(App):
         config.setdefaults('users', {
             'entername': '',
             'enterpin': False,
-            'userslist': ''})
+            'userslist': '',
+            'userscredits': 0})
 
     # Add the Settings pages
     def build_settings(self, settings):
@@ -508,16 +535,20 @@ class SpartenderApp(App):
                 drinksImage = mainScreen.ids.drinksImg
                 widgets = [configWid, settingsWid]
 
-                # Call the function to hide config button here
-                for wid in widgets:
-                    self.hideWidget(wid, int(value))
-
                 if int(value):
+                    # Call the function to hide config button here
+                    for wid in widgets:
+                        self.hideWidget(wid, int(value))
+
                     drinksButton.size_hint = (.9, 45)
-                    drinksImage.source = './assets/design/DrinksBtnLarge.PNG'
+                    drinksImage.source = './assets/design/DrinksBtnLarge.png'
                 else:
+                    # Call the function to unhide config button here
+                    for wid in widgets:
+                        self.hideWidget(wid, int(value))
+
                     drinksButton.size_hint = (.38, .45)
-                    drinksImage.source = './assets/design/DrinksBtn.PNG'
+                    drinksImage.source = './assets/design/DrinksBtn.png'
 
                 # Used to check the partyMode value in our .ini file
                 # print(config.get('settings', 'partyMode'))
@@ -576,6 +607,10 @@ class SpartenderApp(App):
                     if name is not 'name':
                         settingsPin.user = name
                     settingsPin.open()
+
+            elif token == ('users', 'userscredits'):
+                # if
+                pass
 
 
 if __name__ == '__main__':

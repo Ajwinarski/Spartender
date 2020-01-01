@@ -51,7 +51,13 @@ users_json = json.dumps([
      'desc': 'Pick the user from the list of users',
      'section': 'users',
      'key': 'userslist',
-     'options': users}
+     'options': users},
+     {'type': 'numeric',
+      'title': 'Enter Credits Amount',
+      'desc': 'Type in the amount of credits to add to the user',
+      'section': 'users',
+      'key': 'userscredits'
+     }
 ])
 
 # template_json = json.dumps([
