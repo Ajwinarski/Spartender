@@ -1,0 +1,9 @@
+# Remove all python compiled files
+*.pyc
+
+# Remove py cache folder
+**/__pycache__
+
+# Remove other smaller folders
+*/ignore
+*/docs
