@@ -50,6 +50,12 @@ sys.path.append('databases/')
 from settingsjson import *
 from drinks import *
 
+# Import the kv_files directory
+# ROOT_PATH = os.path.dirname(__file__)
+# KV_FILES = os.path.join(ROOT_PATH, 'kv_files')
+# KV_CLASSES = [c[:-3] for c in os.listdir(KV_FILES)
+#     if c.endswith('.kv')]
+
 # Raspberry Pi Imports
 # import RPi.GPIO as GPIO
 

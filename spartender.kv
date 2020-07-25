@@ -1,19 +1,16 @@
-#: import FadeTransition kivy.uix.screenmanager.FadeTransition
-#: import WipeTransition kivy.uix.screenmanager.WipeTransition
 #: import SlideTransition kivy.uix.screenmanager.SlideTransition
-#: import SwapTransition kivy.uix.screenmanager.SwapTransition
+
 
 # ScreenManager:
 #     transition: SlideTransition(duration = 0.55)
 #     MainScreen:
+#     ConfigScreen:
 #     DrinksScreen:
 #     MixedDrinksScreen:
-#     ShotsDrinksScreen:
 #     SodaDrinksScreen:
-#     ConfigScreen:
+#     ShotsDrinksScreen:
+#     DrinkPopup:
 #     KeypadPopup:
-#     # KeyboardPopup:
-#     # SettingsScreen:
 
 # Main Menu Screen
 <MainScreen>:
@@ -135,18 +132,19 @@
             size: self.size
             pos: self.pos
 
+    # Liquid Levels Tab
     TabbedPanelItem:
         text: 'Liquids'
 
         # Layout conatining the sliders and their labels
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 10
+            # spacing: 10
             size_hint: 1, 1
-            pos_hint: {'left': .85, 'center_y': .5}
+            pos_hint: {'left': 1, 'center_y': .5}
             canvas:
                 Color:
-                    rgba: (0, 0, 0, 1) # green
+                    rgba: (0.09411,0.270588,0.231372,1) # green
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -206,16 +204,68 @@
                 on_press: root.manager.transition.direction = 'left'
                 on_release: app.root.current = 'main'
                 pos_hint: {'right': 1, 'center_y': .5}
-                text: 'Back  >'        
+                size_hint: .2, 1
+                text: 'Back  >'    
 
-    # TabbedPanelItem:
-    #     text: 'Add User'
+    # Add User Tab
+    TabbedPanelItem:
+        text: 'Add User'
 
-    #     ConfigTab:
-    #         rows: 3
+        # Layout conatining the sliders and their labels
+        BoxLayout:
+            orientation: 'horizontal'
+            # spacing: 10
+            size_hint: 1, 1
+            pos_hint: {'left': 1, 'center_y': .5}
+            canvas:
+                Color:
+                    rgba: (0.09411,0.270588,0.231372,1) # green
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
 
-    # TabbedPanelItem:
-    #     text: 'Add Credits'
+            # Content Layout
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: .8
+
+            # Back Button
+            BackButton:
+                on_press: root.manager.transition.direction = 'left'
+                on_release: app.root.current = 'main'
+                pos_hint: {'right': 1, 'center_y': .5}
+                size_hint: .2, 1
+                text: 'Back  >'
+
+    # Add Credits Tab
+    TabbedPanelItem:
+        text: 'Add Credits'
+
+        # Layout conatining the sliders and their labels
+        BoxLayout:
+            orientation: 'horizontal'
+            # spacing: 10
+            size_hint: 1, 1
+            pos_hint: {'left': 1, 'center_y': .5}
+            canvas:
+                Color:
+                    rgba: (0.09411,0.270588,0.231372,1) # green
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            # Content Layout
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: .8
+
+            # Back Button
+            BackButton:
+                on_press: root.manager.transition.direction = 'left'
+                on_release: app.root.current = 'main'
+                pos_hint: {'right': 1, 'center_y': .5}
+                size_hint: .2, 1
+                text: 'Back  >'
 
 # Drinks Menu Screen
 <DrinksScreen>:
